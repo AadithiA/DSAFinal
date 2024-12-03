@@ -4,10 +4,12 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <limits>
 
 using namespace std;
+
 struct Anime {
-    int id;
+    int id; //we don't actually need but for reading the file it's there
     string name;
     vector<string> genres;
     string type;
@@ -15,7 +17,7 @@ struct Anime {
     double rating;
     int members;
 };
-// Helper function to split a string by a delimiter
+// helper function to split a string by a delimiter
 vector<string> split(const string& str, char delimiter) {
     vector<string> tokens;
     stringstream ss(str);
@@ -25,23 +27,24 @@ vector<string> split(const string& str, char delimiter) {
     }
     return tokens;
 }
-// Helper function to trim whitespace
+// helper function to trim whitespace
 string trim(const string& str) {
     size_t start = str.find_first_not_of(" \t\r\n");
     size_t end = str.find_last_not_of(" \t\r\n");
+    //reference: https://cplusplus.com/reference/string/string/npos/
     return (start == string::npos) ? "" : str.substr(start, end - start + 1);
 }
-// Helper function to check if a string represents an integer
+// helper function to check if a string represents an integer
 bool isNumber(const string& str) {
     return !str.empty() && all_of(str.begin(), str.end(), ::isdigit);
 }
-// Helper function to check if a string represents a floating-point number
+// helper function to check if a string represents a floating-point number
 bool isFloat(const string& str) {
     std::istringstream iss(str);
     double val;
     return !(str.empty() || !(iss >> val) || !(iss.eof()));
 }
-// Function to parse a line with quoted fields
+// helper function for a line with quoted fields
 vector<string> parseLine(const string& line) {
     vector<string> fields;
     stringstream ss(line);
@@ -82,12 +85,12 @@ vector<Anime> parseAnimeData(const string& filename) {
         // Assign fields
         int anime_id = isNumber(fields[0]) ? stoi(fields[0]) : 0;
         string name = fields[1];
-        vector<string> genreList = split(fields[2], ','); // Split genres by commas
-        string type = fields[3];
+        vector<string> genreList = split(fields[2], ','); // splits genres by commas
+        string type = fields[3];  //for the ? if it's not true it does the second option, aka 0
         int num_episodes = isNumber(fields[4]) && fields[4] != "Unknown" ? stoi(fields[4]) : 0;
         double avg_rating = isFloat(fields[5]) ? stod(fields[5]) : 0.0;
         int num_members = isNumber(fields[6]) ? stoi(fields[6]) : 0;
-        // Create and add Anime object
+        // creates and adds Anime object
         Anime anime = {
                 anime_id,
                 name,
@@ -101,6 +104,12 @@ vector<Anime> parseAnimeData(const string& filename) {
     }
     return animeList;
 }
+void displayGenreTypes(){
+    cout << "Select a Genre " << endl;
+    cout << "Genres: " << endl;
+    cout << "Action, Adventure, Comedy, Drama, Fantasy, Hentai, Historical, Horror" << endl;
+    cout << "Kids, Mystery, Sci-Fi, Shoujo, Shounen, Slice of Life, Supernatural,and Romance" << endl;
+}
 // Function to display Anime information
 void displayAnimeInfo(const Anime& anime) {
     cout << "Choose the information you want to view:" << endl;
@@ -113,6 +122,7 @@ void displayAnimeInfo(const Anime& anime) {
     int choice;
     cin >> choice;
     // Clear the input buffer after numeric input, especially because it led to repeated prints later
+    //Resource: https://cplusplus.com/forum/beginner/217812/#google_vignette
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     if (choice == 1) {
         cout << "Rating: " << anime.rating << endl;
@@ -141,42 +151,57 @@ int main() {
         return 1;
     }
     while (true) {
-        string animeName;
-        cout << "Enter the anime name (or type 'exit' to quit): " << endl;
-        getline(cin, animeName); // Use getline to handle input consistently
-        if (animeName == "exit") {
-            break;
+        string option;
+        cout << "Type '1' to find a specific anime or type '2' to find a specific genre (or type 'exit' to quit):" << endl;
+        getline(cin, option);
+        if (option == "exit"){ //change this later!
+            cout << "Bye bish :)" << endl;
         }
-        // Search for the anime by name
-        Anime* foundAnime = nullptr;
-        for (auto& anime : animeList) {
-            if (anime.name == animeName) {
-                foundAnime = &anime;
+        if (option == "1") {
+            //this finds a specific anime
+            string animeName;
+            cout << "Enter the anime name (or type 'exit' to quit): " << endl;
+            getline(cin, animeName); // Use getline to handle input consistently
+            if (animeName == "exit") {
                 break;
             }
-        }
-        if (foundAnime) {
-            displayAnimeInfo(*foundAnime);
-        } else {
-            cout << "Anime not found!" << endl;
-        }
-        string response;
-        while (true) { // Keep prompting until a valid response is given
-            cout << "Do you want to search for another anime? (yes/no): " << endl;
-            getline(cin, response); // Use getline to handle input consistently
-            response = trim(response);
-            if (response.empty()) {
-                // Skip displaying an invalid input message for empty responses
-                continue;
+            // search for the anime by name
+            Anime *foundAnime = nullptr;
+            for (auto &anime: animeList) {
+                if (anime.name == animeName) {
+                    foundAnime = &anime;
+                    break;
+                }
             }
-            if (response == "yes") {
-                break; // Exit the inner loop and continue searching
-            } else if (response == "no") {
-                cout << "Goodbye!" << endl;
-                return 0; // Exit the program
+            if (foundAnime) {
+                displayAnimeInfo(*foundAnime);
             } else {
-                cout << "Invalid input. Please enter 'yes' or 'no'." << endl;
+                cout << "Anime not found!" << endl;
             }
+            string response;
+        }
+        else if (option == "2"){ //Usage of alogirthms
+            cout <<"How do you want the anime to be organized by? Type 'In Order' or 'Max Heap" << endl;
+            string algorithm, genre;
+            getline(cin, algorithm);
+            if (algorithm == "In Order"){ //organizes Anime list alphabetically, based off an inputted genre:
+                displayGenreTypes();
+                getline(cin, genre);
+                cout << genre << endl;
+                cout << "In Order Traversal will go here" << endl;
+            }
+            else if (algorithm == "Max Heap"){ //organizes Anime list by highest rating
+                displayGenreTypes();
+                getline(cin, genre);
+                cout << genre << endl;
+                cout << "Max Heap will go here" << endl;
+            }
+            else {
+                cout << "Try again motherf*cker curse thy soul on this earth" << endl;
+            }
+        }
+        else {
+            cout << "Don't piss me off" << endl;
         }
     }
     return 0;
