@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <limits>
 #include <queue>
+#include <functional>
 
 using namespace std;
 
