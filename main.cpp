@@ -115,6 +115,64 @@ void displayGenreTypes(){
     cout << "Action, Adventure, Comedy, Drama, Fantasy, Hentai, Historical, Horror" << endl;
     cout << "Kids, Mystery, Sci-Fi, Shoujo, Shounen, Slice of Life, Supernatural,and Romance" << endl;
 }
+
+struct TreeNode {
+    string animeName;
+    TreeNode* left;
+    TreeNode* right;
+
+    TreeNode(string name) : animeName(name), left(nullptr), right(nullptr) {}
+};
+
+TreeNode* insertNode(TreeNode* root, const string& animeName) {
+    string normalizedAnimeName = animeName;
+    if (!animeName.empty() && islower(animeName[0])) {
+        normalizedAnimeName[0] = toupper(animeName[0]);
+    }
+
+    if (!root) return new TreeNode(normalizedAnimeName);
+
+    if (normalizedAnimeName < root->animeName) {
+        root->left = insertNode(root->left, normalizedAnimeName);
+    } else {
+        root->right = insertNode(root->right, normalizedAnimeName);
+    }
+    return root;
+}
+
+void inOrderTraversal(TreeNode* root, vector<string>& result) {
+    if (!root) return;
+    inOrderTraversal(root->left, result);
+    result.push_back(root->animeName);
+    inOrderTraversal(root->right, result);
+}
+
+void organizeAnimeByGenre(const vector<Anime>& animeList, const string& genre) {
+    TreeNode* root = nullptr;
+    for (const auto& anime : animeList) {
+        if (find(anime.genres.begin(), anime.genres.end(), genre) != anime.genres.end()) {
+            root = insertNode(root, anime.name);
+        }
+    }
+    vector<string> sortedAnime;
+    inOrderTraversal(root, sortedAnime);
+    if (sortedAnime.empty()) {
+        cout << "No anime found for genre: " << genre << endl;
+    } else {
+        cout << "Anime in genre \"" << genre << "\" sorted alphabetically:" << endl;
+        for (const auto& name : sortedAnime) {
+            cout << name << endl;
+        }
+    }
+    function<void(TreeNode*)> deleteTree = [&](TreeNode* node) {
+        if (!node) return;
+        deleteTree(node->left);
+        deleteTree(node->right);
+        delete node;
+    };
+    deleteTree(root);
+}
+
 // Function to display Anime information
 void displayAnimeInfo(const Anime& anime) {
     cout << "Choose the information you want to view:" << endl;
@@ -191,8 +249,7 @@ int main() {
             if (algorithm == "In Order"){ //organizes Anime list alphabetically, based off an inputted genre:
                 displayGenreTypes();
                 getline(cin, genre);
-                cout << genre << endl;
-                cout << "In Order Traversal will go here" << endl;
+                organizeAnimeByGenre(animeList, genre);
             }
             else if (algorithm == "Max Heap"){ //organizes Anime list by highest rating
                 displayGenreTypes();
