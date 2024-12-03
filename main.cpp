@@ -5,6 +5,7 @@
 #include <string>
 #include <algorithm>
 #include <limits>
+#include <queue>
 
 using namespace std;
 
@@ -16,6 +17,10 @@ struct Anime {
     int episodes;
     double rating;
     int members;
+
+    bool operator<(const Anime &other) const {
+        return rating < other.rating;
+    }
 };
 // helper function to split a string by a delimiter
 vector<string> split(const string& str, char delimiter) {
@@ -146,6 +151,7 @@ void displayAnimeInfo(const Anime& anime) {
 int main() {
     string filename = "Anime.csv";
     vector<Anime> animeList = parseAnimeData(filename);
+
     if (animeList.empty()) {
         cerr << "No data available. Check your file." << endl;
         return 1;
@@ -193,8 +199,33 @@ int main() {
             else if (algorithm == "Max Heap"){ //organizes Anime list by highest rating
                 displayGenreTypes();
                 getline(cin, genre);
-                cout << genre << endl;
-                cout << "Max Heap will go here" << endl;
+                transform(genre.begin(), genre.end(), genre.begin(), ::tolower);
+                genre =trim(genre);
+                priority_queue<Anime> maxHeap;
+                // cout << genre << endl;
+                // cout << "Max Heap will go here" << endl;
+                for (auto &anime: animeList) {
+                    for(const auto &thegenres: anime.genres) {
+                        string name = thegenres;
+                        transform(name.begin(), name.end(), name.begin(), ::tolower);
+                        if (name == genre) {
+                            maxHeap.push(anime);
+                            break;
+                        }
+                    }
+                }
+                if (!maxHeap.empty()) {
+                    //const Anime& topAnime = maxHeap.top();
+                    cout<<"Top anime in:" << genre <<"genre:" << endl;
+                    while(!maxHeap.empty()) {
+                        const Anime& topAnime = maxHeap.top();
+                        cout<< topAnime.name << " |Rating:"<< topAnime.rating << endl;
+                        maxHeap.pop();
+                    }
+                }
+                else {
+                    cout << "Anime not found!" << endl;
+                }
             }
             else {
                 cout << "Try again motherf*cker curse thy soul on this earth" << endl;
