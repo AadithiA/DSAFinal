@@ -109,7 +109,7 @@ void displayAnimeInfo(const Anime& anime) {
     cout << "3. Genre" << endl;
     cout << "4. Type" << endl;
     cout << "5. Community Size" << endl;
-    cout << "Enter your choice (1-5): ";
+    cout << "Enter your choice (1-5): " << endl;
     int choice;
     cin >> choice;
     // Clear the input buffer after numeric input, especially because it led to repeated prints later
@@ -121,7 +121,7 @@ void displayAnimeInfo(const Anime& anime) {
     } else if (choice == 3) {
         cout << "Genres: ";
         for (const auto& genre : anime.genres) {
-            cout << genre << " ";
+            cout << genre << " " << endl;
         }
         cout << endl;
     } else if (choice == 4) {
