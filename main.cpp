@@ -244,15 +244,15 @@ int main() {
             string response;
         }
         else if (option == "2"){ //Usage of alogirthms
-            cout <<"How do you want the anime to be organized by? Type 'In Order' or 'Max Heap" << endl;
+            cout <<"How do you want the anime to be organized by? Type 'Alphabetical' (Sorted using In Order Traversal) or 'Rating' (Sorted using Max Heap)" << endl;
             string algorithm, genre;
             getline(cin, algorithm);
-            if (algorithm == "In Order"){ //organizes Anime list alphabetically, based off an inputted genre:
+            if (algorithm == "Alphabetical"){ //organizes Anime list alphabetically, based off an inputted genre:
                 displayGenreTypes();
                 getline(cin, genre);
                 organizeAnimeByGenre(animeList, genre);
             }
-            else if (algorithm == "Max Heap"){ //organizes Anime list by highest rating
+            else if (algorithm == "Rating"){ //organizes Anime list by highest rating
                 displayGenreTypes();
                 getline(cin, genre);
                 transform(genre.begin(), genre.end(), genre.begin(), ::tolower); //transform reference: https://www.geeksforgeeks.org/transform-c-stl-perform-operation-elements/
