@@ -17,7 +17,7 @@ struct Anime {
     int episodes;
     double rating;
     int members;
-
+    //compares the rating with the other ratings
     bool operator<(const Anime &other) const {
         return rating < other.rating;
     }
@@ -151,7 +151,6 @@ void displayAnimeInfo(const Anime& anime) {
 int main() {
     string filename = "Anime.csv";
     vector<Anime> animeList = parseAnimeData(filename);
-
     if (animeList.empty()) {
         cerr << "No data available. Check your file." << endl;
         return 1;
@@ -170,8 +169,7 @@ int main() {
             getline(cin, animeName); // Use getline to handle input consistently
             if (animeName == "exit") {
                 break;
-            }
-            // search for the anime by name
+            } // search for the anime by name
             Anime *foundAnime = nullptr;
             for (auto &anime: animeList) {
                 if (anime.name == animeName) {
@@ -199,11 +197,9 @@ int main() {
             else if (algorithm == "Max Heap"){ //organizes Anime list by highest rating
                 displayGenreTypes();
                 getline(cin, genre);
-                transform(genre.begin(), genre.end(), genre.begin(), ::tolower);
+                transform(genre.begin(), genre.end(), genre.begin(), ::tolower); //transform reference: https://www.geeksforgeeks.org/transform-c-stl-perform-operation-elements/
                 genre =trim(genre);
                 priority_queue<Anime> maxHeap;
-                // cout << genre << endl;
-                // cout << "Max Heap will go here" << endl;
                 for (auto &anime: animeList) {
                     for(const auto &thegenres: anime.genres) {
                         string name = thegenres;
