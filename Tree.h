@@ -198,6 +198,7 @@ void organizeAnimeByGenre(const vector<Anime>& animeList, const string& genre) {
         }
     }
     function<void(TreeNode*)> deleteTree = [&](TreeNode* node) {
+        // Resource: https://en.cppreference.com/w/cpp/header/functional
         if (!node) return;
         deleteTree(node->left);
         deleteTree(node->right);
