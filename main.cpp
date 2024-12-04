@@ -19,6 +19,7 @@ int main() {
         getline(cin, option);
         if (option == "exit"){ //change this later!
             cout << "Bye bish :)" << endl;
+            break;
         }
         if (option == "1") {
             //this finds a specific anime
