@@ -1,13 +1,9 @@
-//
-// Created by Adriel on 12/3/2024.
-//
 
 #ifndef DSAFINAL_TREE_H
 #define DSAFINAL_TREE_H
 
 #endif //DSAFINAL_TREE_H
-//
-// Created by Adriel on 12/3/2024.
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
